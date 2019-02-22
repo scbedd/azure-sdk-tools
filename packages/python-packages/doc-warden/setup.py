@@ -48,6 +48,7 @@ setup(
         'pyyaml', # docsettings file parse
         'markdown2', # parsing markdown to html
         'docutils', # parsing rst to html
+        'pygments', # parsing rst to html
         'beautifulsoup4', # parsing of generated html
         'pathlib'
     ],
