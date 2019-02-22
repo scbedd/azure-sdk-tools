@@ -2,11 +2,9 @@ from .version import VERSION
 
 from .enforce_readme_presence import find_missing_readmes
 from .enforce_readme_content import verify_readme_content
-
 from .WardenConfiguration import WardenConfiguration
-from .warden_common import check_match, walk_directory_for_pattern, return_true, get_omitted_files
+from .warden_common import walk_directory_for_pattern, get_omitted_files
 from .cmd_entry import console_entry_point 
-
 
 __all__ = [
            'WardenConfiguration',
