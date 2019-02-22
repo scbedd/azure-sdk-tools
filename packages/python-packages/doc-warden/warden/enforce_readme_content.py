@@ -79,9 +79,7 @@ def find_missed_sections(html_soup, patterns):
 # checks a header tag (soup) against a set of configured patterns
 def match_regex_set(header, patterns):
     matching_patterns = []
-    print(header.get_text())
     for pattern in patterns:
-        print(pattern)
         result = re.search(pattern, header.get_text())
         if result:
             matching_patterns.append(pattern)
