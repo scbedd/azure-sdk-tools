@@ -67,7 +67,7 @@ class WardenConfiguration():
             self.omitted_paths = []
 
         try:
-            self.required_readme_sections = doc['required_readme_sections']
+            self.required_readme_sections = doc['required_readme_sections'] or []
         except:
             self.required_readme_sections = []
 
