@@ -1,1 +1,0 @@
-enforce_example_integrity.py

@@ -10,28 +10,13 @@ import markdown2
 import bs4
 import re
 from .warden_common import check_match, walk_directory_for_pattern, get_omitted_files
-
-README_PATTERNS = ['*/readme.md', '*/README.md', '*/readme.rst']
-
 from docutils import core
 from docutils.writers.html4css1 import Writer,HTMLTranslator
 
-class HTMLFragmentTranslator(HTMLTranslator):
-    def __init__(self, document):
-        HTMLTranslator.__init__(self, document)
-        self.head_prefix = ['','','','','']
-        self.body_prefix = []
-        self.body_suffix = []
-        self.stylesheet = []
-    def astext(self):
-        return ''.join(self.body)
+# fnmatch is case insensitive by default, just look for readme rst and md
+README_PATTERNS = ['*/readme.md', '*/readme.rst']
 
-html_fragment_writer = Writer()
-html_fragment_writer.translator_class = HTMLFragmentTranslator
-
-def rst_to_html(input_rst):
-    return core.publish_string(input_rst, writer = html_fragment_writer)
-
+# entry point
 def verify_readme_content(config):
     all_readmes = walk_directory_for_pattern(config.target_directory, README_PATTERNS)
     omitted_readmes = get_omitted_files(config)
@@ -48,6 +33,7 @@ def verify_readme_content(config):
 
     results([readme_tuple for readme_tuple in readme_results if readme_tuple[1]], config)
 
+# output results
 def results(readmes_with_issues, config):
     if len(readmes_with_issues):
         print('{} readmes have missing required sections.'.format(len(readmes_with_issues)))
@@ -57,6 +43,7 @@ def results(readmes_with_issues, config):
                 print(' * {0}'.format(missing_pattern))
         exit(1)
 
+# parse rst to html, check for presence of appropriate sectionsZ
 def verify_rst_readme(readme, config):
     with open(readme, 'r') as f:
         readme_content = f.read()
@@ -67,6 +54,7 @@ def verify_rst_readme(readme, config):
 
     return (readme, missed_patterns)
 
+# parse md to html, check for presence of appropriate sectionsZ
 def verify_md_readme(readme, config):
     with open(readme, 'r') as f:
         readme_content = f.read()
@@ -77,6 +65,7 @@ def verify_md_readme(readme, config):
 
     return (readme, missed_patterns)
 
+# within the entire readme, are there any missing sections that are expected?
 def find_missed_sections(html_soup, patterns):
     headers = html_soup.find_all(re.compile('^h[1-6]$'))
     missed_patterns = []
@@ -85,9 +74,9 @@ def find_missed_sections(html_soup, patterns):
     for header in headers:
         observed_patterns.extend(match_regex_set(header, patterns))
 
-    # return what patterns were missed
     return list(set(patterns) - set(observed_patterns))
 
+# checks a header tag (soup) against a set of configured patterns
 def match_regex_set(header, patterns):
     matching_patterns = []
     print(header.get_text())
@@ -97,3 +86,21 @@ def match_regex_set(header, patterns):
         if result:
             matching_patterns.append(pattern)
     return matching_patterns
+
+# boilerplate for translating RST
+class HTMLFragmentTranslator(HTMLTranslator):
+    def __init__(self, document):
+        HTMLTranslator.__init__(self, document)
+        self.head_prefix = ['','','','','']
+        self.body_prefix = []
+        self.body_suffix = []
+        self.stylesheet = []
+    def astext(self):
+        return ''.join(self.body)
+
+html_fragment_writer = Writer()
+html_fragment_writer.translator_class = HTMLFragmentTranslator
+
+# utilize boilerplate
+def rst_to_html(input_rst):
+    return core.publish_string(input_rst, writer = html_fragment_writer)
