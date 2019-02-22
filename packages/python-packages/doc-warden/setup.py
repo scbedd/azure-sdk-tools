@@ -45,7 +45,9 @@ setup(
     ],
     packages=find_packages(),
     install_requires = [
-        'pyyaml',
+        'pyyaml', # docsettings file parse
+        'markdown2' # parsing markdown to html
+        'beautifulsoup4' # parsing of generated html
         'pathlib'
     ],
     entry_points = {
