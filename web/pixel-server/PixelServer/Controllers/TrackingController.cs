@@ -38,7 +38,7 @@ namespace PixelServer.Controllers
         [HttpGet]
         public async Task<ActionResult> Get(string path)
         {
-            await trackEventAsync(path);
+            trackEventAsync(path);
 
             return File(img, "image/png");
         }
