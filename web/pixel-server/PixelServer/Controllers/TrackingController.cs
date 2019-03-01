@@ -51,13 +51,14 @@ namespace PixelServer.Controllers
                 telemetry = new TelemetryClient();
             }
 
-            //await Task.Run(() => {
-            //    telemetry.TrackEvent("PixelImpression", new Dictionary<string, string>()
-            //    {
-            //        { "visitor_duplicate", getCachedVisitorStatus(getRequestAddress()) },
-            //        { "visitor_path", path }
-            //    });
-            //});
+            await Task.Run(() =>
+            {
+                telemetry.TrackEvent("PixelImpression", new Dictionary<string, string>()
+                {
+                    { "visitor_duplicate", getCachedVisitorStatus(getRequestAddress()) },
+                    { "visitor_path", path }
+                });
+            });
         }
 
         private string getCachedVisitorStatus(string address)
