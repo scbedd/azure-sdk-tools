@@ -15,18 +15,17 @@ namespace PixelServer.Controllers
     [ApiController]
     public class TrackingController : ControllerBase
     {
-        // used for manual logs to application insights
-        private static TelemetryClient telemetry;
-
         // populated and returned as 1 pixel image
-        private static byte[] img;
-        private static string imgPath = AppDomain.CurrentDomain.BaseDirectory + "/Etc/pixel.png";
+        private static readonly string imgPath = AppDomain.CurrentDomain.BaseDirectory + "/Etc/pixel.png";
+        private static readonly byte[] img = System.IO.File.ReadAllBytes(imgPath);
 
-        private IMemoryCache _cache;
+        private readonly IMemoryCache _cache;
+        private readonly TelemetryClient telemetry;
 
-        public TrackingController(IMemoryCache memoryCache)
+        public TrackingController(IMemoryCache memoryCache, TelemetryClient telemetry)
         {
             _cache = memoryCache;
+            this.telemetry = telemetry;
         }
 
         /// <summary>
@@ -41,16 +40,11 @@ namespace PixelServer.Controllers
         {
             await trackEventAsync(path);
 
-            return File(getCachedImage(), "image/png");
+            return File(img, "image/png");
         }
 
         private async Task trackEventAsync(string path)
         {
-            if (telemetry == null)
-            {
-                telemetry = new TelemetryClient();
-            }
-
             await Task.Run(() =>
             {
                 telemetry.TrackEvent("PixelImpression", new Dictionary<string, string>()
@@ -61,7 +55,7 @@ namespace PixelServer.Controllers
             });
         }
 
-        private string getCachedVisitorStatus(string address)
+        private string getCachedVisitorStatus(System.Net.IPAddress address)
         {
             if (!_cache.TryGetValue(address, out _))
             {
@@ -79,19 +73,9 @@ namespace PixelServer.Controllers
             return "true";
         }
 
-        private byte[] getCachedImage()
+        private System.Net.IPAddress getRequestAddress()
         {
-            if (img == null)
-            {
-                img = System.IO.File.ReadAllBytes(imgPath);
-            }
-
-            return img;
-        }
-
-        private string getRequestAddress()
-        {
-            return Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            return Request.HttpContext.Connection.RemoteIpAddress;
         }
     }
 }

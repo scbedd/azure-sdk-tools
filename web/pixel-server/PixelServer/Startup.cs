@@ -26,6 +26,7 @@ namespace PixelServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMemoryCache();
+            services.AddApplicationInsightsTelemetry(Configuration);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 

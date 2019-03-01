@@ -1,11 +1,10 @@
 # Pixel Server
 
-This site is intended as a backing server to serve tracking pixels. Note that the limit of data retrieved here is merely:
+This site is intended as a backing server to serve pixels being loaded on a web page. Note that the limit of data retrieved here is merely:
 
 > a pixel with query string `x` was requested 
 
 No PII data is recorded. 
-
 
 ## Prerequisites
 * This project was built, tested, and peformance checked using `.NET Core 2.1`.
@@ -14,6 +13,17 @@ No PII data is recorded.
 
 ## Usage
 To add a tracking pixel, simply embed an image of the following form.
+
+```
+Markdown:
+![AltText](https://<yourappservicename>.azurewebsites.net/api/impressions?path=<URI-path> "AltText")
+
+RST:
+.. image::  https://<yourappservicename>.azurewebsites.net/api/impressions?path=<URI-path>
+
+Img URL:
+<img src="https://<yourappservicename>.azurewebsites.net/api/impressions?path=<URI-path>">
+```
 
 ## Deployment and Setup
 
