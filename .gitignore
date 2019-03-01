@@ -81,6 +81,13 @@ celerybeat-schedule
 # SageMath parsed files
 *.sage.py
 
+# publish profiles
+*.pubxml
+*.pubxml.user
+
+# user profiles
+*.csproj.user
+
 # Environments
 .env
 .venv
