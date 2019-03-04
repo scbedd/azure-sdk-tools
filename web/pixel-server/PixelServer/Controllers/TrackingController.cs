@@ -5,9 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Primitives;
 
 namespace PixelServer.Controllers
 {
@@ -15,10 +15,6 @@ namespace PixelServer.Controllers
     [ApiController]
     public class TrackingController : ControllerBase
     {
-        // populated and returned as 1 pixel image
-        private static readonly string imgPath = AppDomain.CurrentDomain.BaseDirectory + "/Etc/pixel.png";
-        private static readonly byte[] img = System.IO.File.ReadAllBytes(imgPath);
-
         private readonly IMemoryCache _cache;
         private readonly TelemetryClient telemetry;
 
@@ -36,23 +32,15 @@ namespace PixelServer.Controllers
         /// <param name="path"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult> Get(string path)
+        public IActionResult Get(string path)
         {
-            trackEventAsync(path);
-
-            return File(img, "image/png");
-        }
-
-        private async Task trackEventAsync(string path)
-        {
-            await Task.Run(() =>
+            telemetry.TrackEvent("PixelImpression", new Dictionary<string, string>()
             {
-                telemetry.TrackEvent("PixelImpression", new Dictionary<string, string>()
-                {
-                    { "visitor_duplicate", getCachedVisitorStatus(getRequestAddress()) },
-                    { "visitor_path", path }
-                });
+                { "visitor_duplicate", getCachedVisitorStatus(getRequestAddress()) },
+                { "visitor_path", path }
             });
+
+            return new ImageActionResult();
         }
 
         private string getCachedVisitorStatus(System.Net.IPAddress address)
@@ -77,5 +65,19 @@ namespace PixelServer.Controllers
         {
             return Request.HttpContext.Connection.RemoteIpAddress;
         }
+
+        private class ImageActionResult : IActionResult
+        {
+            private static readonly byte[] _imgPayload = System.IO.File.ReadAllBytes(AppDomain.CurrentDomain.BaseDirectory + "/Etc/pixel.png");
+
+            public Task ExecuteResultAsync(ActionContext context)
+            {
+                context.HttpContext.Response.StatusCode = StatusCodes.Status200OK;
+                context.HttpContext.Response.ContentType = "image/png";
+                context.HttpContext.Response.ContentLength = _imgPayload.Length;
+                return context.HttpContext.Response.Body.WriteAsync(_imgPayload, 0, _imgPayload.Length);
+            }
+        }
+
     }
 }
