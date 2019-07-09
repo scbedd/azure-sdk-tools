@@ -44,6 +44,8 @@ class PackageInfo():
             url = self.get_formatted_repository_url(configuration)
 
         try:
+            if config.verbose_output:
+                print('Testing url: {}'.format(url))
             response = requests.get(url)
             if response.status_code == 200:
                 return True
