@@ -12,6 +12,7 @@ using Microsoft.Extensions.Caching.Memory;
 namespace PixelServer.Controllers
 {
     [ApiController]
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public class TrackingController : ControllerBase
     {
         private readonly IMemoryCache _cache;
@@ -37,7 +38,8 @@ namespace PixelServer.Controllers
             _telemetry.TrackEvent("PixelImpression", new Dictionary<string, string>()
             {
                 { "visitor_duplicate", getCachedVisitorStatus(getRequestAddress()) },
-                { "visitor_path", path }
+                { "visitor_path", path },
+                { "referrer", Request.Headers["Referer"].ToString() }
             });
 
             return new ImageActionResult();
