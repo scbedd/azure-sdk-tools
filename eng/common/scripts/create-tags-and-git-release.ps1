@@ -39,6 +39,8 @@ function CreateReleases($pkgList, $releaseApiUrl, $releaseSha) {
       $isPrerelease = ![string]::IsNullOrEmpty($preReleaseLabel)
     }
 
+    $releaseNotes = $releaseNotes.replace(" ", "")
+
     $url = $releaseApiUrl
     $body = ConvertTo-Json @{
       tag_name         = $pkgInfo.Tag
