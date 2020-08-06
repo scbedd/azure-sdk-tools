@@ -46,10 +46,10 @@ $userReviewers = @($resp.users | % { return $_.login })
 $teamReviewers = @($resp.teams | % { return $_.slug })
 
 if (!$usersReviewers) { $modifiedUserReviewers = @() } else { $modifiedUserReviewers = $usersReviewers.Clone() }
-$modifiedUserReviewers += ($modifiedUserReviewers | ? { !$usersReviews.Contains($_) })
+$modifiedUserReviewers += ($userAdditions | ? { !$modifiedUserReviewers.Contains($_) })
 
 if ($teamReviewers) { $modifiedTeamReviewers = @() } else { $modifiedTeamReviewers = $teamReviewers.Clone() }
-$modifiedTeamReviewers += ($modifiedUserReviewers | ? { !$teamReviewers.Contains($_) })
+$modifiedTeamReviewers += ($teamAdditions | ? { !$modifiedTeamReviewers.Contains($_) })
 
 $detectedUserDiffs = Compare-Object -ReferenceObject $userReviewers -DifferenceObject $modifiedUserReviewers
 $detectedTeamDiffs = Compare-Object -ReferenceObject $teamReviewers -DifferenceObject $modifiedTeamReviewers
