@@ -76,7 +76,6 @@ namespace Azure.Sdk.Tools.TestProxy
                 statusThreadCts.Token);
 
             builtHost.Run();
-
             statusThreadCts.Cancel();
             statusThread.Join();
         }
