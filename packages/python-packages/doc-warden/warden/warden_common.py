@@ -6,6 +6,7 @@ import fnmatch
 import re
 import xml.etree.ElementTree as ET
 import pathlib2
+import pdb
 
 # python 3 transitioned StringIO to be part of `io` module.
 # python 2 needs the old version however
@@ -112,6 +113,8 @@ def get_file_sets(configuration, target_pattern, lambda_check=None):
     )
     omitted_files = get_omitted_files(configuration)
 
+    pdb.set_trace()
+
     return (
         list(set(expected_locations) - set(omitted_files)),
         list(set(omitted_files).intersection(expected_locations)),
@@ -159,6 +162,9 @@ def walk_directory_for_pattern(
     lambda_check=None,
     directory_mode=False,
 ):
+    if "README.md" in target_patterns[0]:
+        pdb.set_trace()
+
     expected_locations = []
     target_directory = os.path.normpath(target_directory)
     normalized_target_patterns = [
@@ -172,6 +178,8 @@ def walk_directory_for_pattern(
         for file in files:
             file_path = os.path.join(folder, file)
 
+            if "README.md" in target_patterns[0] and "README.md" in file_path:
+                pdb.set_trace()
             if check_match(file_path, normalized_target_patterns, directory_mode):
                 if configuration.verbose_output:
                     print(
