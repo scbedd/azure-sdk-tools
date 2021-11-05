@@ -31,7 +31,14 @@ A couple notes about the above:
 - `test-proxy-tool.yml`: This one installs and runs the test-proxy as a dotnet tool.
 - `test-proxy-docker.yml`: This yml pulls down the relevant docker image and runs _that_ instead of directly running the tool.
 
-Note that both `.yml` files can be used to start the proxy. It is up to the user to determine which methodology they wish to use. It is recommended that one uses the same method as they would recommend to the team for local testing.
+Note that both `.yml` files can be used to start the proxy. It is up to the user to determine which methodology they wish to use. Due to limitations of `docker` licensing, `mac` agents are not shipped with `docker` installed. As a result, if your test-matrix includes `mac` agents, `test-proxy-tool.yml` would be the way to go.
+
+#### A note about proxy auto-start vs manual
+
+Given that each language team is encouraged to make the local dev testing experience spin the proxy automatically, it may lead to conflicts in running the proxy within CI vs auto-start during local dev.
+
+Both the tool and docker yml templates set environment variable 
+
 
 ### SSL Support In Devops
 
