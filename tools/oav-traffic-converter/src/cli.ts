@@ -64,6 +64,10 @@ function convert(directory: string, outDirectory: string) {
     let files: Array<string> = fs.readdirSync(directory);
     FileCount = files.length;
 
+    files = files.filter((file: string) => {
+        return file.endsWith(".json");
+    })
+
     files.forEach((file: string) => {
         readFile(file);
     });
