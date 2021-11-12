@@ -57,6 +57,10 @@ function convert(directory: string, outDirectory: string) {
     InputDirectory = directory;
     OutputDirectory = outDirectory;
 
+    if(!fs.existsSync(outDirectory)){
+        fs.mkdirSync(outDirectory);
+    }
+
     let files: Array<string> = fs.readdirSync(directory);
     FileCount = files.length;
 
