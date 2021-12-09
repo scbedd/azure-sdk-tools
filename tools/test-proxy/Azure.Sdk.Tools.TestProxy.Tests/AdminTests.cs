@@ -524,5 +524,31 @@ namespace Azure.Sdk.Tools.TestProxy.Tests
             );
             assertion.StatusCode.Equals(HttpStatusCode.BadRequest);
         }
+
+
+        [Fact]
+        public void TestAddConditionalTransform()
+        {
+        }
+
+        [Fact]
+        public void TestAddConditionalSanitizer()
+        {
+        }
+
+        [Fact]
+        public void TestConditionalAddThrowsOnInvalidURIRegex()
+        {
+        }
+
+        [Fact]
+        public void TestAddConditionalMatcher()
+        {
+        }
+
+        [Fact]
+        public void TestAddConditionalMatcherThrowsOnInvalidConditions()
+        {
+        }
     }
 }
