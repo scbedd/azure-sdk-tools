@@ -19,7 +19,8 @@ namespace Azure.Sdk.Tools.TestProxy.Common
         // relaxed settings for roundtrip
         private static readonly JsonWriterOptions WriterOptions = new JsonWriterOptions()
         {
-            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            Indented = false
         };
 
         public RequestOrResponse Request { get; set; } = new RequestOrResponse();
