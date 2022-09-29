@@ -360,5 +360,97 @@ namespace Azure.Sdk.Tools.TestProxy.Tests.IntegrationTests
                 DirectoryHelper.DeleteGitDirectory(testFolder);
             }
         }
+
+        /// <summary>
+        /// 1. Start playback, which will autorestore a target tag.
+        /// 2. Make a pending change.
+        /// 3. Start recording. which should _also_ autorestore the _same_ target tag. It should _not_ discard pending changes.
+        /// 5. Make a second pending change.
+        /// 4. Verify local files include _both_ pending changes from step 2 and 5.
+        /// </summary>
+        /// <param name="inputJson"></param>
+        /// <returns></returns>
+        [EnvironmentConditionalSkipTheory]
+        [InlineData(
+        @"{
+              ""AssetsRepo"": ""Azure/azure-sdk-assets-integration"",
+              ""AssetsRepoPrefixPath"": ""pull/scenarios"",
+              ""AssetsRepoId"": """",
+              ""TagPrefix"": ""language/tables"",
+              ""Tag"": ""language/tables_9e81fb""
+        }")]
+        [Trait("Category", "Integration")]
+        public async Task MaintainPendingChanges(string inputJson)
+        {
+            var folderStructure = new string[]
+            {
+                GitStoretests.AssetsJson
+            };
+            Assets assets = JsonSerializer.Deserialize<Assets>(inputJson);
+            Assets updatedAssets = null;
+            string originalTagPrefix = assets.TagPrefix;
+            string originalTag = assets.Tag;
+            var testFolder = TestHelpers.DescribeTestFolder(assets, folderStructure, isPushTest: true);
+            try
+            {
+                // Ensure that the TagPrefix was updated
+                Assert.NotEqual(originalTagPrefix, assets.TagPrefix);
+
+                var jsonFileLocation = Path.Join(testFolder, GitStoretests.AssetsJson);
+
+                var parsedConfiguration = await _defaultStore.ParseConfigurationFile(jsonFileLocation);
+                //await _defaultStore.Restore(jsonFileLocation);
+
+                //// Calling Path.GetFullPath of the Path.Combine will ensure any directory separators are normalized for
+                //// the OS the test is running on. The reason being is that AssetsRepoPrefixPath, if there's a separator,
+                //// will be a forward one as expected by git but on Windows this won't result in a usable path.
+                //string localFilePath = Path.GetFullPath(Path.Combine(parsedConfiguration.AssetsRepoLocation, parsedConfiguration.AssetsRepoPrefixPath));
+
+                //// These are the files pulled down with the original Tag
+                //Assert.Equal(4, System.IO.Directory.EnumerateFiles(localFilePath).Count());
+                //Assert.True(TestHelpers.VerifyFileVersion(localFilePath, "file1.txt", 1));
+                //Assert.True(TestHelpers.VerifyFileVersion(localFilePath, "file2.txt", 2));
+                //Assert.True(TestHelpers.VerifyFileVersion(localFilePath, "file3.txt", 2));
+                //Assert.True(TestHelpers.VerifyFileVersion(localFilePath, "file4.txt", 1));
+
+                //// Create a new file, update an existing file and delete an existing file.
+                //TestHelpers.CreateFileWithInitialVersion(localFilePath, "file6.txt");
+                //TestHelpers.IncrementFileVersion(localFilePath, "file1.txt");
+                //TestHelpers.IncrementFileVersion(localFilePath, "file2.txt");
+                //Assert.True(TestHelpers.VerifyFileVersion(localFilePath, "file1.txt", 2));
+                //Assert.True(TestHelpers.VerifyFileVersion(localFilePath, "file2.txt", 3));
+                //Assert.True(TestHelpers.VerifyFileVersion(localFilePath, "file6.txt", 1));
+                //File.Delete(Path.Combine(localFilePath, "file3.txt"));
+                //File.Delete(Path.Combine(localFilePath, "file4.txt"));
+
+                //// Push the update, it should detect a conflict:
+                //// The latest commit only has files 2,4,5 with versions 2,1,1 respectively
+                //// We've made the the following changes against the previous Tag
+                //// 1. File1's version was incremented to 2, but deleted in the latest Tag
+                //// 2. File2's version was incremented to 3
+                //// 3. File3 was deleted
+                //// 4. File4 was deleted
+                //// 5. File6 was added
+                //await _defaultStore.Push(jsonFileLocation);
+
+                //// Verify that after the push the directory still contains our updated files
+                //Assert.Equal(3, System.IO.Directory.EnumerateFiles(localFilePath).Count());
+                //Assert.True(TestHelpers.VerifyFileVersion(localFilePath, "file1.txt", 2));
+                //Assert.True(TestHelpers.VerifyFileVersion(localFilePath, "file2.txt", 3));
+                //Assert.True(TestHelpers.VerifyFileVersion(localFilePath, "file6.txt", 1));
+
+                //// Ensure that the config was updated with the new Tag as part of the push
+                //updatedAssets = TestHelpers.LoadAssetsFromFile(jsonFileLocation);
+                //Assert.NotEqual(originalTag, updatedAssets.Tag);
+
+                //// Ensure that the targeted tag is present on the repo
+                //TestHelpers.CheckExistenceOfTag(updatedAssets, localFilePath);
+            }
+            finally
+            {
+                DirectoryHelper.DeleteGitDirectory(testFolder);
+                TestHelpers.CleanupIntegrationTestTag(updatedAssets);
+            }
+        }
     }
 }
