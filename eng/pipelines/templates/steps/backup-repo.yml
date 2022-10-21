@@ -1,0 +1,35 @@
+parameters:
+  - name: SourceRepo
+    type: string
+  - name: TargetRepo
+    type: string
+  # Github PAT
+  - name: GH_TOKEN
+    type: string
+  - name: BlobSASUrl
+    type: string
+    default: ""
+
+variables:
+  WorkDirectory: $(Build.SourcesDirectory)/_source
+
+steps:
+  - pwsh: |
+      New-Item -Path $(WorkDirectory) -ItemType Directory -Force
+
+      git clone --mirror "https://${{ parameters.GH_TOKEN }}@github.com/${{ parameters.SourceRepo }}.git" $(WorkDirectory)
+
+      if ($LASTEXITCODE -ne 0) {
+        Write-Error "Unable to clone ${{ parameters.SourceRepo }}"
+        exit 1
+      }
+    displayName: Clone target repo
+
+  - pwsh: |
+      git push --mirror "https://${{ parameters.GH_TOKEN }}@github.com/${{ parameters.TargetRepo }}.git"
+    displayName: Backup git repo to external git repo
+    workingDirectory: "$(WorkDirectory)"
+
+  - pwsh: |
+      Write-Host "blah"
+    displayName: Backup git repo to blob storage
