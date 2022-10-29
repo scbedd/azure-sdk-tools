@@ -4,23 +4,46 @@ from subprocess import run
 import shutil
 import glob
 import pdb
+import yaml
+from yaml import Loader
 
-from typing import List
+from typing import List, Tuple
 
 
 def verify_path(path: str) -> None:
     if not os.path.exists(path):
         os.makedirs(path)
 
+def check_python_ci_for_proxy(parsed_yaml):
+    if "TestProxy" in parsed_yaml["extends"]["parameters"]:
+        return True
 
-def discover_python_status(work_dir: str, repo: str) -> List[str]:
-    # clone the repo into target folder
-    run(["git", "clone", "--depth", "1", f"https://github.com/{repo}.git", "."], cwd=work_dir)
+    return False
+
+
+def discover_python_status(work_dir: str, repo: str) -> List[Tuple[str, bool]]:
+    if (not os.path.exists(os.path.join(work_dir, ".git"))):
+        run(["git", "clone", "--depth", "1", f"https://github.com/{repo}.git", "."], cwd=work_dir)
+
+    packages = []
 
     # discover all service directories
-    services = glob.glob("sdk/*/ci.yml", root_dir=work_dir)
+    services = glob.glob(os.path.join(work_dir, "sdk/*/ci.yml"), recursive=True)
 
-    pdb.set_trace()
+    for service_folder in services:
+        globber = os.path.join(os.path.dirname(service_folder), "*", "setup.py")
+        pkgs = glob.glob(globber, recursive=True)
+
+        with open(service_folder, "r", encoding="utf-8") as f:
+            parsed_yml = yaml.load(f, Loader=Loader)
+
+        proxy_on = check_python_ci_for_proxy(parsed_yml)
+
+        for pkg in pkgs:
+            pkg_name = os.path.basename(os.path.dirname(pkg))
+            packages.append((pkg_name, proxy_on))
+
+    return packages
 
 
 def discover_net_status(work_dir: str, repo: str) -> List[str]:
@@ -61,9 +84,8 @@ if __name__ == "__main__":
     if not args.work_directory:
         args.work_directory = os.path.join(os.getcwd(), ".work")
 
-    # clean up the previous run
-    shutil.rmtree(args.work_directory)
-    os.path.mkdirs(args.work_directory)
+    if not os.path.exists(args.work_directory):
+        os.makedirs(args.work_directory)
 
     # walk all the repos, do the needful on each
     for repo in REPOS.keys():
@@ -71,4 +93,10 @@ if __name__ == "__main__":
         verify_path(target_path)
         parsed_results[repo] = REPOS[repo](target_path, repo)
 
-    print(parsed_results)
+    print("# Test-Proxy Conversation Report")
+    for repo in parsed_results.keys():
+        if parsed_results[repo]:
+            print(f"## {repo}")
+            on_proxy = [package for package in parsed_results[repo] if package[1]]
+            not_on_proxy = [package for package in parsed_results[repo] if not package[1]]
+            print(f"{len(on_proxy)} out of {len(parsed_results[repo])} packages have been converted to the test-proxy.")
