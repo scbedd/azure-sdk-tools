@@ -110,7 +110,7 @@ namespace Azure.Sdk.Tools.TestProxy
 
             // last but not least, the first argument is a verb, verify it's our verb
             // version and help are default verbs and need to be in here
-            string[] array = { "start", "reset", "restore", "push", "version", "help" };
+            string[] array = { "start", "reset", "restore", "push", "version", "help", "cd" };
             if (!array.Contains(args[0]))
             {
                 // The odd looking formatting is to make this look like the same error
