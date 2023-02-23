@@ -464,6 +464,8 @@ Add a more expansive Header sanitizer that uses a target group instead of filter
 }
 ```
 
+For further samples of common sanitizer registrations, please refer to [sample-customizations.md](../documentation/test-proxy/sample-customizations.md).
+
 #### A note about where sanitizers apply
 
 Each sanitizer is optionally prefaced with the **specific part** of the request/response pair that it applies to. These prefixes are
