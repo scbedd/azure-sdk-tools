@@ -61,7 +61,7 @@ namespace Azure.Sdk.Tools.TestProxy.CommandOptions
             root.AddGlobalOption(storagePluginOption);
 
             root.SetHandler(async (defaultOpts) => await callback(defaultOpts),
-                new DefaultOptsBinder(storageLocationOption, storagePluginOption)
+                new DefaultOptsBinder(storageLocationOption, storagePluginOption, collectedArgs)
             );
 
             var startCommand = new Command("start", "Start the TestProxy.");

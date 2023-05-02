@@ -51,6 +51,25 @@ namespace Azure.Sdk.Tools.TestProxy.Tests
             }
         }
 
+        [Theory]
+        [InlineData("--", "--urls", "https://localhost:8002")]
+        public async Task TestDefaultOptionsHonorsUrls(params string[] input)
+        {
+            var obj = new object();
+            var rootCommand = OptionsGenerator.GenerateCommandLineOptions((DefaultOptions) =>
+            {
+                obj = DefaultOptions;
+
+                return Task.CompletedTask;
+            });
+            var exitCode = await rootCommand.InvokeAsync(input);
+
+            Assert.True(obj is DefaultOptions);
+            Assert.Equal(new string[] { "--urls", "https://localhost:8002" }, ((StartOptions)obj).AdditionalArgs);
+            Assert.Equal(0, exitCode);
+        }
+
+
         [Fact]
         public async Task TestServerInvocationsHonorUnmatched()
         {
