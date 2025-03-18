@@ -3,6 +3,7 @@ Import-Module Pester
 # Load scenarios before we enter the Describe block so they're available for -ForEach
 $netScenarios = Get-Content (Join-Path $PSScriptRoot net_scenarios.json) | ConvertFrom-Json
 $pythonScenarios = Get-Content (Join-Path $PSScriptRoot python_scenarios.json) | ConvertFrom-Json
+$jsScenarios = Get-Content (Join-Path $PSScriptRoot js_scenarios.json) | ConvertFrom-Json
 
 Describe "Acceptance tests for .NET PR Matrix Generation" -Tag "Integration" {
     BeforeAll {
@@ -64,7 +65,7 @@ Describe "Acceptance tests for JS PR Matrix Generation" -Tag "Integration" {
         $RepoRoot = Get-Repo -Repo $JS_REPO -Reference $JS_REPO_REF
     }
 
-    It "Should evaluate python diffs correctly - <name>" -ForEach $pythonScenarios {
+    It "Should evaluate python diffs correctly - <name>" -ForEach $jsScenarios {
         Write-Host "Operating against repo: $RepoRoot"
         $scenario = $_
 
