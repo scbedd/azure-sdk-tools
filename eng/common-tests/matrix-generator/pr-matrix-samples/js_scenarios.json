@@ -4,7 +4,6 @@
         "diff":   {
             "ChangedFiles": [
               "common/config/rush/common-versions.json",
-              "common/config/rush/pnpm-lock.yaml",
               "sdk/storage/storage-blob/src/Clients.ts",
               "sdk/storage/storage-file-datalake/src/clients.ts",
               "sdk/storage/storage-file-share/test/utils/index.ts",
@@ -20,5 +19,20 @@
         },
         "expected_package_output": [
         ]
-    }
+    },
+    {
+      "name": "Change to multi-ci.yml service skips triggering",
+      "diff":   {
+          "ChangedFiles": [
+            "sdk/storage/CONTRIBUTING.md"
+          ],
+          "ChangedServices": [],
+          "ExcludePaths": [],
+          "DeletedFiles": [],
+          "PRNumber": "33362"
+      },
+      "expected_package_output": [
+
+      ]
+  }
 ]

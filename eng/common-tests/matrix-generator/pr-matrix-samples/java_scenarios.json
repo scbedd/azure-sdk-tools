@@ -1,12 +1,12 @@
 [
     {
-        "name": "Specific Core Change",
+        "name": "Specific Package Change",
         "diff": {
             "ChangedFiles": [
-              "sdk/core/azure-core/src/test/java/com/azure/core/validation/http/LocalTestServer.java"
+              "sdk/appconfiguration/azure-data-appconfiguration/CHANGELOG.md"
             ],
             "ChangedServices": [
-              "core"
+              "appconfiguration"
             ],
             "ExcludePaths": [
                 "eng/versioning/external_dependencies.txt",
@@ -52,14 +52,6 @@
             "ChangedFiles": [
               "eng/versioning/external_dependencies.txt",
               "sdk/clientcore/optional-dependency-tests/pom.xml",
-              "sdk/core/azure-core-http-jdk-httpclient/pom.xml",
-              "sdk/core/azure-core-http-jdk-httpclient/src/main/java/com/azure/core/http/jdk/httpclient/JdkHttpClient.java",
-              "sdk/core/azure-core-http-netty/pom.xml",
-              "sdk/core/azure-core-http-netty/src/main/java/com/azure/core/http/netty/NettyAsyncHttpClientBuilder.java",
-              "sdk/core/azure-core-http-okhttp/pom.xml",
-              "sdk/core/azure-core-http-okhttp/src/test/java/com/azure/core/http/okhttp/OkHttpClientLocalTestServer.java",
-              "sdk/core/azure-core-http-vertx/pom.xml",
-              "sdk/core/azure-core/pom.xml",
               "sdk/core/azure-core/src/test/java/com/azure/core/validation/http/LocalTestServer.java"
             ],
             "ChangedServices": [
@@ -98,15 +90,60 @@
                 "sdk/mediaservices/microsoft-azure-media/",
                 "sdk/servicebus/microsoft-azure-servicebus/",
                 "sdk/spring/"
-              ],
-              "DeletedFiles": [],
-              "PRNumber": "44295"
+            ],
+            "DeletedFiles": [],
+            "PRNumber": "44295"
         },
         "expected_package_output": []
     },
     {
       "name": "Only excluded files changed",
-      "diff": {},
+      "diff": {
+        "ChangedFiles": [
+          "eng/versioning/external_dependencies.txt",
+          "sdk/clientcore/optional-dependency-tests/pom.xml",
+          "sdk/core/azure-core/src/test/java/com/azure/core/validation/http/LocalTestServer.java"
+        ],
+        "ChangedServices": [
+          "clientcore",
+          "core"
+        ],
+        "ExcludePaths": [
+            "eng/versioning/external_dependencies.txt",
+            "eng/versioning/version_client.txt",
+            "eng/versioning/version_data.txt",
+            "eng/versioning/version_data_java_files.txt",
+            "sdk/batch/microsoft-azure-batch/",
+            "sdk/boms/",
+            "sdk/cosmos/",
+            "sdk/e2e/",
+            "sdk/cognitiveservices/ms-azure-cs-autosuggest/",
+            "sdk/cognitiveservices/ms-azure-cs-computervision/",
+            "sdk/cognitiveservices/ms-azure-cs-contentmoderator/",
+            "sdk/cognitiveservices/ms-azure-cs-customimagesearch/",
+            "sdk/cognitiveservices/ms-azure-cs-customsearch/",
+            "sdk/cognitiveservices/ms-azure-cs-customvision-prediction/",
+            "sdk/cognitiveservices/ms-azure-cs-customvision-training/",
+            "sdk/cognitiveservices/ms-azure-cs-entitysearch/",
+            "sdk/cognitiveservices/ms-azure-cs-faceapi/",
+            "sdk/cognitiveservices/ms-azure-cs-imagesearch/",
+            "sdk/cognitiveservices/ms-azure-cs-luis-authoring/",
+            "sdk/cognitiveservices/ms-azure-cs-luis-runtime/",
+            "sdk/cognitiveservices/ms-azure-cs-newssearch/",
+            "sdk/cognitiveservices/ms-azure-cs-qnamaker/",
+            "sdk/cognitiveservices/ms-azure-cs-spellcheck/",
+            "sdk/cognitiveservices/ms-azure-cs-videosearch/",
+            "sdk/cognitiveservices/ms-azure-cs-visualsearch/",
+            "sdk/cognitiveservices/ms-azure-cs-websearch/",
+            "sdk/eventhubs/microsoft-azure-eventhubs/",
+            "sdk/eventhubs/microsoft-azure-eventhubs-eph/",
+            "sdk/mediaservices/microsoft-azure-media/",
+            "sdk/servicebus/microsoft-azure-servicebus/",
+            "sdk/spring/"
+        ],
+        "DeletedFiles": [],
+        "PRNumber": "44295"
+      },
       "expected_package_output": []
     }
 ]

@@ -59,7 +59,7 @@ Describe "Acceptance tests for Python PR Matrix Generation" -Tag "Integration" {
 
 Describe "Acceptance tests for JS PR Matrix Generation" -Tag "Integration" {
     BeforeAll {
-        $JS_REPO_REF = "f8f2e0a2609506abf48de5751b498349fc6a1b91"
+        $JS_REPO_REF = "e2598ca60018edc7b0c3a5b3a28ae7fb40b85894"
         $JS_REPO = "Azure/azure-sdk-for-js"
 
         . $PSScriptRoot/pr-matrix-generation-acceptance.helpers.ps1
