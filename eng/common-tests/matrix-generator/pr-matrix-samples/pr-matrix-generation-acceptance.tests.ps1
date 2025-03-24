@@ -30,7 +30,7 @@ Describe "Acceptance tests for .NET PR Matrix Generation" -Tag "Integration" {
 
 Describe "Acceptance tests for Python PR Matrix Generation" -Tag "Integration" {
     BeforeAll {
-        $PYTHON_REPO_REF = "d762abb4d84d78b58db91a45646351c5789ae211"
+        $PYTHON_REPO_REF = "7656cf20f78b7653522040e372a37ff03338b1a2"
         $PYTHON_REPO = "Azure/azure-sdk-for-python"
 
         . $PSScriptRoot/pr-matrix-generation-acceptance.helpers.ps1
