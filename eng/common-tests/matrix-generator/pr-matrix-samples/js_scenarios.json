@@ -1,7 +1,7 @@
 [
     {
         "name": "Combined Change + Indirect Core",
-        "diff":   {
+        "diff": {
             "ChangedFiles": [
               "common/config/rush/common-versions.json",
               "sdk/storage/storage-blob/src/Clients.ts",
@@ -22,7 +22,7 @@
     },
     {
       "name": "Change to multi-ci.yml service skips triggering",
-      "diff":   {
+      "diff": {
           "ChangedFiles": [
             "sdk/storage/CONTRIBUTING.md"
           ],

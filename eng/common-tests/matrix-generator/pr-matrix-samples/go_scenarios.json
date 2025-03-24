@@ -1,7 +1,47 @@
 [
     {
         "name": "Specific Core Change",
-        "diff": {},
+        "diff": {
+            "ChangedFiles": [
+              "sdk/azcore/core.go"
+            ],
+            "ChangedServices": [
+              "azcore"
+            ],
+            "ExcludePaths": [],
+            "DeletedFiles": [],
+            "PRNumber": "33362"
+        },
+        "expected_package_output": []
+    },
+    {
+        "name": "Change multiple resourcemanager packages",
+        "diff": {
+            "ChangedFiles": [
+              "sdk/resourcemanager/dashboard/armdashboard/constants.go",
+              "sdk/resourcemanager/storage/armstorage/accounts_client.go",
+              "sdk/resourcemanager/customproviders/armcustomproviders/LICENSE.txt"
+            ],
+            "ChangedServices": [
+              "resourcemanager"
+            ],
+            "ExcludePaths": [],
+            "DeletedFiles": [],
+            "PRNumber": "33362"
+        },
+        "expected_package_output": []
+    },
+    {
+        "name": "Indirect Change",
+        "diff": {
+            "ChangedFiles": [
+              "eng/.golangci.yml"
+            ],
+            "ChangedServices": [],
+            "ExcludePaths": [],
+            "DeletedFiles": [],
+            "PRNumber": "33362"
+        },
         "expected_package_output": []
     }
 ]
