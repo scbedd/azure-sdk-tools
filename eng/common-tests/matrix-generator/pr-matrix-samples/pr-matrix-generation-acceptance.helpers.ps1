@@ -124,12 +124,9 @@ Function Compare-PackageResults {
     $sortedExpected = $Expected | Sort-Object -Property Name
 
     for ($i = 0; $i -lt $sortedActual.Count; $i++) {
-        $actual = $sortedActual[$i]
-        $expected = $sortedExpected[$i]
-
-        OrderArtifactDetails -PackagePropObject $actual
-        OrderArtifactDetails -PackagePropObject $expected
+        OrderArtifactDetails -PackagePropObject $sortedActual[$i]
+        OrderArtifactDetails -PackagePropObject $sortedExpected[$i]
     }
 
-    $sortedActual | Should -Be $sortedExpected
+    $sortedActual | ConvertTo-Json -Depth 100 | Should -Be ($sortedExpected | ConvertTo-Json -Depth 100)
 }
