@@ -4,6 +4,8 @@ Import-Module Pester
 $netScenarios = Get-Content (Join-Path $PSScriptRoot net_scenarios.json) | ConvertFrom-Json
 $pythonScenarios = Get-Content (Join-Path $PSScriptRoot python_scenarios.json) | ConvertFrom-Json
 $jsScenarios = Get-Content (Join-Path $PSScriptRoot js_scenarios.json) | ConvertFrom-Json
+$goScenarios = Get-Content (Join-Path $PSScriptRoot go_scenarios.json) | ConvertFrom-Json
+$javaScenarios = Get-Content (Join-Path $PSScriptRoot java_scenarios.json) | ConvertFrom-Json
 
 Describe "Acceptance tests for .NET PR Matrix Generation" -Tag "Integration" {
     BeforeAll {
@@ -14,7 +16,7 @@ Describe "Acceptance tests for .NET PR Matrix Generation" -Tag "Integration" {
         $RepoRoot = Get-Repo -Repo $NET_REPO -Reference $NET_REPO_REF
     }
 
-    It "Should evaluate .NET core diffs correctly - <name>" -ForEach $netScenarios {
+    It "Should evaluate targeted .NET packages correctly - <name>" -ForEach $netScenarios {
         $scenario = $_
         $outputProps = Invoke-PackageProps -InputDiff $scenario.diff -Repo "$RepoRoot"
         $expectedOutputs = $scenario.expected_package_output | Sort-Object -Property Name
@@ -35,7 +37,7 @@ Describe "Acceptance tests for Python PR Matrix Generation" -Tag "Integration" {
         $RepoRoot = Get-Repo -Repo $PYTHON_REPO -Reference $PYTHON_REPO_REF
     }
 
-    It "Should evaluate python diffs correctly - <name>" -ForEach $pythonScenarios {
+    It "Should evaluate targeted pyton packages correctly - <name>" -ForEach $pythonScenarios {
         Write-Host "Operating against repo: $RepoRoot"
         $scenario = $_
 
@@ -55,17 +57,74 @@ Describe "Acceptance tests for Python PR Matrix Generation" -Tag "Integration" {
     }
 }
 
-
 Describe "Acceptance tests for JS PR Matrix Generation" -Tag "Integration" {
     BeforeAll {
-        $JS_REPO_REF = "c2c9315e40d0805903abc03e4703fc5edf45254a"
+        $JS_REPO_REF = "f8f2e0a2609506abf48de5751b498349fc6a1b91"
         $JS_REPO = "Azure/azure-sdk-for-js"
 
         . $PSScriptRoot/pr-matrix-generation-acceptance.helpers.ps1
         $RepoRoot = Get-Repo -Repo $JS_REPO -Reference $JS_REPO_REF
     }
 
-    It "Should evaluate python diffs correctly - <name>" -ForEach $jsScenarios {
+    It "Should evaluate targeted js packages correctly - <name>" -ForEach $jsScenarios {
+        Write-Host "Operating against repo: $RepoRoot"
+        $scenario = $_
+
+        if (-not $scenario.diff) {
+            Write-Host "Skipping scenario with no diff"
+            return
+        }
+        else {
+            $outputProps = Invoke-PackageProps -InputDiff $scenario.diff -Repo "$RepoRoot"
+            $expectedOutputs = $scenario.expected_package_output | Sort-Object -Property Name
+            $detectedOutputs = Get-ChildItem -Path $outputProps -Recurse -Filter "*.json" -Exclude "pr-diff.json" `
+                | ForEach-Object { Get-Content -Raw $_ | ConvertFrom-Json }
+                | Sort-Object -Property Name
+
+            Compare-PackageResults -Actual $detectedOutputs -Expected $expectedOutputs
+        }
+    }
+}
+
+Describe "Acceptance tests for Go PR Matrix Generation" -Tag "Integration" {
+    BeforeAll {
+        $GO_REPO_REF = "3b377dfbd2a99afada527c0dee50d7ab59115ad4"
+        $GO_REPO = "Azure/azure-sdk-for-go"
+
+        . $PSScriptRoot/pr-matrix-generation-acceptance.helpers.ps1
+        $RepoRoot = Get-Repo -Repo $GO_REPO -Reference $GO_REPO_REF
+    }
+
+    It "Should evaluate targeted go packages correctly - <name>" -ForEach $goScenarios {
+        Write-Host "Operating against repo: $RepoRoot"
+        $scenario = $_
+
+        if (-not $scenario.diff) {
+            Write-Host "Skipping scenario with no diff"
+            return
+        }
+        else {
+            $outputProps = Invoke-PackageProps -InputDiff $scenario.diff -Repo "$RepoRoot"
+            $expectedOutputs = $scenario.expected_package_output | Sort-Object -Property Name
+            $detectedOutputs = Get-ChildItem -Path $outputProps -Recurse -Filter "*.json" -Exclude "pr-diff.json" `
+                | ForEach-Object { Get-Content -Raw $_ | ConvertFrom-Json }
+                | Sort-Object -Property Name
+
+            Compare-PackageResults -Actual $detectedOutputs -Expected $expectedOutputs
+        }
+    }
+}
+
+Describe "Acceptance tests for Java PR Matrix Generation" -Tag "Integration" {
+    BeforeAll {
+        $JAVA_REPO_REF = "24edb14e62cf4d9ccee3e1a23924ff403ce194a8"
+        $JAVA_REPO = "Azure/azure-sdk-for-java"
+
+        . $PSScriptRoot/pr-matrix-generation-acceptance.helpers.ps1
+        $RepoRoot = Get-Repo -Repo $JAVA_REPO -Reference $JAVA_REPO_REF
+    }
+
+    It "Should evaluate targeted java packages correctly - <name>" -ForEach $javaScenarios {
         Write-Host "Operating against repo: $RepoRoot"
         $scenario = $_
 

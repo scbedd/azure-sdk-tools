@@ -1,13 +1,12 @@
 [
     {
-        "name": "eventhubs-individiual-change",
+        "name": "Individual Package Change",
         "diff": {
           "ChangedFiles": [
             "sdk/eventhub/Azure.Messaging.EventHubs/README.md"
           ],
           "ChangedServices": [
-            "eventhub",
-            "template"
+            "eventhub"
           ],
           "ExcludePaths": [],
           "DeletedFiles": [],
@@ -42,5 +41,20 @@
             }
           }
         ]
+    },
+    {
+      "name": "Eng Change",
+      "diff": {},
+      "expected_package_output": []
+    },
+    {
+      "name": "Resource Manager Change",
+      "diff": {},
+      "expected_package_output": []
+    },
+    {
+      "name": "Core Change",
+      "diff": {},
+      "expected_package_output": []
     }
 ]
