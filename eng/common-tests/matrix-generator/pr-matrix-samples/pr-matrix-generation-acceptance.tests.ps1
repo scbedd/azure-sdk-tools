@@ -88,7 +88,7 @@ Describe "Acceptance tests for JS PR Matrix Generation" -Tag "Integration" {
 
 Describe "Acceptance tests for Go PR Matrix Generation" -Tag "Integration" {
     BeforeAll {
-        $GO_REPO_REF = "3b377dfbd2a99afada527c0dee50d7ab59115ad4"
+        $GO_REPO_REF = "524f41ef0bdb788e8df3e77fcf47f982421ee5d9"
         $GO_REPO = "Azure/azure-sdk-for-go"
 
         . $PSScriptRoot/pr-matrix-generation-acceptance.helpers.ps1
