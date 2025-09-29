@@ -876,6 +876,23 @@ namespace Azure.Sdk.Tools.TestProxy.Tests
             Assert.NotNull(session.Session.Entries.First().Request.Body);
         }
 
+
+        [Fact]
+        public async Task CanProcessLargeMultipartFormdata()
+        {
+            var session = TestHelpers.LoadRecordSession("Test.RecordEntries/failing_mutipart_formdata_pre_problematic_sanitizer.json");
+
+            var nonProblematicSanitizer = new HeaderRegexSanitizer("Moop", value: "REDACTED", regex: "SuperDifferent");
+            await session.Session.Sanitize(nonProblematicSanitizer);
+
+            // we should get here
+            var problematicSanitizer = new HeaderRegexSanitizer("Content-Type", value: "multipart/form-data; boundary=BOUNDARY", regex: "(^multipart/form-data; boundary=[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{2})");
+
+            // this should fail
+            await session.Session.Sanitize(problematicSanitizer);
+        }
+
+
         [Fact]
         public async Task CanSanitizeComplexRequest()
         {
