@@ -38,6 +38,18 @@ namespace Azure.Sdk.Tools.TestProxy.Tests
         }
 
         [Fact]
+        public async void SanitizerRemovesTags()
+        {
+            var session = TestHelpers.LoadRecordSession("Test.RecordEntries/proxy_not_sanitizing.json");
+
+            var clientSan = new BodyRegexSanitizer(regex: @"(?is)""tags""\s*:\s*{(.*?)}", groupForReplace: "1", value: "");
+
+            await session.Session.Sanitize(clientSan);
+
+            Assert.DoesNotContain("wesh", Encoding.UTF8.GetString(session.Session.Entries[0].Response.Body));
+        }
+
+        [Fact]
         public async void SanitizerDecodesUnicodeAmpersandSanitizesClientIdAndSecret()
         {
             var session = TestHelpers.LoadRecordSession("Test.RecordEntries/request_with_encoding.json");
