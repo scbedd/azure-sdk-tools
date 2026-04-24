@@ -231,6 +231,25 @@ extends:
                 Publish: false
                 ImageTag: "${{ parameters.DockerTagPrefix }}$(Build.BuildNumber)"
 
+      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - stage: PostAllChecksStatus
+          displayName: Post All Checks Pass
+          condition: always()
+          dependsOn: BuildTestAndPackage
+
+          pool:
+            name: $(LINUXPOOL)
+            image: $(LINUXVMIMAGE)
+            os: linux
+
+          jobs:
+            - job: PostStatus
+              displayName: Evaluate and Post Check Status
+              steps:
+                - checkout: self
+
+                - template: /eng/common/pipelines/templates/steps/post-all-checks-status.yml
+
       - ${{ if and(ne(parameters.SkipReleaseStage, true), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['System.TeamProject'], 'internal'))}}:
         - template: /eng/pipelines/templates/stages/archetype-sdk-publish-net.yml
           parameters:
