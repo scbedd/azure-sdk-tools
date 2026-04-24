@@ -1,0 +1,252 @@
+# This pipeline lives in the azure-sdk/internal AzDO project.
+# It triggers on completion of every PR-triggered public pipeline in this repo,
+# reads the GitHub Checks API for the triggering commit, and exits 0 (all green)
+# or 1 (any check still running or failed). AzDO posts the result to GitHub
+# automatically — no GitHub API write is needed.
+#
+# "Handle Status Checks" must be set as the sole required status check in the
+# GitHub branch protection rules for `main`.
+#
+# NOTE: Each `source:` value must match the AzDO pipeline display name exactly
+# as registered in the azure-sdk/public project. Confirm names before deploying.
+
+trigger: none
+pr: none
+
+resources:
+  pipelines:
+  # tools/apiview/emitters/typespec-apiview
+  - pipeline: typespec-apiview
+    project: public
+    source: 'azure-sdk-tools - typespec-apiview'
+    trigger: true
+  # tools/apiview/parsers/apiview-treestyle-parser-schema
+  - pipeline: apiview-treestyle-parser-schema
+    project: public
+    source: 'azure-sdk-tools - apiview-treestyle-parser-schema'
+    trigger: true
+  # tools/apiview/parsers/cpp-api-parser
+  - pipeline: cpp-api-parser
+    project: public
+    source: 'azure-sdk-tools - cpp-api-parser'
+    trigger: true
+  # tools/apiview/parsers/csharp-api-parser
+  - pipeline: csharp-api-parser
+    project: public
+    source: 'azure-sdk-tools - csharp-api-parser'
+    trigger: true
+  # tools/apiview/parsers/js-api-parser
+  - pipeline: js-api-parser
+    project: public
+    source: 'azure-sdk-tools - js-api-parser'
+    trigger: true
+  # tools/apiview/parsers/rust-api-parser
+  - pipeline: rust-api-parser
+    project: public
+    source: 'azure-sdk-tools - rust-api-parser'
+    trigger: true
+  # tools/apiview/parsers/swagger-api-parser
+  - pipeline: swagger-api-parser
+    project: public
+    source: 'azure-sdk-tools - swagger-api-parser'
+    trigger: true
+  # tools/assets-automation
+  - pipeline: assets-automation
+    project: public
+    source: 'azure-sdk-tools - assets-automation'
+    trigger: true
+  # tools/azsdk-cli
+  - pipeline: azsdk-cli
+    project: public
+    source: 'azure-sdk-tools - azsdk-cli'
+    trigger: true
+  # tools/azure-rest-api-specs-examples-automation
+  - pipeline: azure-rest-api-specs-examples-automation
+    project: public
+    source: 'azure-sdk-tools - azure-rest-api-specs-examples-automation'
+    trigger: true
+  # tools/codeowners-utils
+  - pipeline: codeowners-utils
+    project: public
+    source: 'azure-sdk-tools - codeowners-utils'
+    trigger: true
+  # tools/content-validation
+  - pipeline: content-validation
+    project: public
+    source: 'azure-sdk-tools - content-validation'
+    trigger: true
+  # tools/github-event-processor
+  - pipeline: github-event-processor
+    project: public
+    source: 'azure-sdk-tools - github-event-processor'
+    trigger: true
+  # tools/http-fault-injector
+  - pipeline: http-fault-injector
+    project: public
+    source: 'azure-sdk-tools - http-fault-injector'
+    trigger: true
+  # tools/identity-resolution
+  - pipeline: identity-resolution
+    project: public
+    source: 'azure-sdk-tools - identity-resolution'
+    trigger: true
+  # tools/issue-labeler
+  - pipeline: issue-labeler
+    project: public
+    source: 'azure-sdk-tools - issue-labeler'
+    trigger: true
+  # tools/js-sdk-release-tools
+  - pipeline: js-sdk-release-tools
+    project: public
+    source: 'azure-sdk-tools - js-sdk-release-tools'
+    trigger: true
+  # tools/net-changelog-gen-mgmt
+  - pipeline: net-changelog-gen-mgmt
+    project: public
+    source: 'azure-sdk-tools - net-changelog-gen-mgmt'
+    trigger: true
+  # tools/notification-configuration
+  - pipeline: notification-configuration
+    project: public
+    source: 'azure-sdk-tools - notification-configuration'
+    trigger: true
+  # tools/oav-traffic-converter
+  - pipeline: oav-traffic-converter
+    project: public
+    source: 'azure-sdk-tools - oav-traffic-converter'
+    trigger: true
+  # tools/perf-automation
+  - pipeline: perf-automation
+    project: public
+    source: 'azure-sdk-tools - perf-automation'
+    trigger: true
+  # tools/pipeline-generator
+  - pipeline: pipeline-generator
+    project: public
+    source: 'azure-sdk-tools - pipeline-generator'
+    trigger: true
+  # tools/pipeline-owners-extractor
+  - pipeline: pipeline-owners-extractor
+    project: public
+    source: 'azure-sdk-tools - pipeline-owners-extractor'
+    trigger: true
+  # tools/pipeline-witness
+  - pipeline: pipeline-witness
+    project: public
+    source: 'azure-sdk-tools - pipeline-witness'
+    trigger: true
+  # tools/pylint-extensions/azure-pylint-guidelines-checker
+  - pipeline: azure-pylint-guidelines-checker
+    project: public
+    source: 'azure-sdk-tools - azure-pylint-guidelines-checker'
+    trigger: true
+  # tools/sdk-ai-bots/azure-sdk-qa-bot-backend/pipeline
+  - pipeline: azure-sdk-qa-bot-backend
+    project: public
+    source: 'azure-sdk-tools - azure-sdk-qa-bot-backend'
+    trigger: true
+  # tools/sdk-ai-bots/azure-sdk-qa-bot-knowledge-sync
+  - pipeline: azure-sdk-qa-bot-knowledge-sync
+    project: public
+    source: 'azure-sdk-tools - azure-sdk-qa-bot-knowledge-sync'
+    trigger: true
+  # tools/sdk-testgen
+  - pipeline: sdk-testgen
+    project: public
+    source: 'azure-sdk-tools - sdk-testgen'
+    trigger: true
+  # tools/secret-management
+  - pipeline: secret-management
+    project: public
+    source: 'azure-sdk-tools - secret-management'
+    trigger: true
+  # tools/snippet-generator
+  - pipeline: snippet-generator
+    project: public
+    source: 'azure-sdk-tools - snippet-generator'
+    trigger: true
+  # tools/spec-gen-sdk
+  - pipeline: spec-gen-sdk
+    project: public
+    source: 'azure-sdk-tools - spec-gen-sdk'
+    trigger: true
+  # tools/stress-cluster
+  - pipeline: stress-cluster
+    project: public
+    source: 'azure-sdk-tools - stress-cluster'
+    trigger: true
+  # tools/stress-cluster/services/Stress.Watcher
+  - pipeline: stress-watcher
+    project: public
+    source: 'azure-sdk-tools - stress-watcher'
+    trigger: true
+  # tools/test-proxy
+  - pipeline: test-proxy
+    project: public
+    source: 'azure-sdk-tools - test-proxy'
+    trigger: true
+  # tools/tsp-client
+  - pipeline: tsp-client
+    project: public
+    source: 'azure-sdk-tools - tsp-client'
+    trigger: true
+  # tools/typespec-bump-deps
+  - pipeline: typespec-bump-deps
+    project: public
+    source: 'azure-sdk-tools - typespec-bump-deps'
+    trigger: true
+
+variables:
+  GITHUB_REPO: 'Azure/azure-sdk-tools'
+
+jobs:
+- job: HandleStatusChecks
+  displayName: 'Handle Status Checks'
+  pool:
+    vmImage: ubuntu-latest
+  steps:
+  - template: /eng/common/pipelines/templates/steps/login-to-github.yml
+    parameters:
+      TokenOwners:
+        - Azure
+
+  - bash: |
+      SHA="$(resources.pipeline.triggering.sourceCommit)"
+
+      if [ -z "$SHA" ]; then
+        echo "##[error]Could not determine source commit SHA from triggering pipeline resource."
+        exit 1
+      fi
+
+      echo "Checking GitHub status for commit: $SHA"
+
+      RESPONSE=$(curl -s \
+        -H "Authorization: token $(GH_TOKEN)" \
+        -H "Accept: application/vnd.github+json" \
+        "https://api.github.com/repos/$(GITHUB_REPO)/commits/${SHA}/check-runs?per_page=100")
+
+      BLOCKING=$(echo "$RESPONSE" | jq '[.check_runs[] |
+        select(.name != "Handle Status Checks") |
+        select(
+          .status == "in_progress" or
+          .status == "queued" or
+          (.status == "completed" and (
+            .conclusion == "failure" or
+            .conclusion == "timed_out" or
+            .conclusion == "cancelled" or
+            .conclusion == "action_required"
+          ))
+        )] | length')
+
+      echo "Blocking checks (excluding self): $BLOCKING"
+
+      if [ "$BLOCKING" -gt 0 ]; then
+        echo "##[error]$BLOCKING check(s) are still in-progress or failed."
+        echo "$RESPONSE" | jq '[.check_runs[] | select(.name != "Handle Status Checks") | {name, status, conclusion}]'
+        exit 1
+      fi
+
+      echo "All other checks passed or were skipped."
+    displayName: 'Evaluate PR check statuses'
+    env:
+      GH_TOKEN: $(GH_TOKEN)
